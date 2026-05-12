@@ -2,6 +2,9 @@ import winreg, requests, subprocess, tempfile, os
 from typing import Optional
 from tqdm import tqdm
 
+_DLL_PATH = os.path.join(os.path.dirname(__file__), "mylib.dll")
+os.add_dll_directory(os.path.dirname(_DLL_PATH))
+
 __all__ = ['WEBVIEW2_BOOTSTRAPPER_URL', 'is_webview2_installed',
            'download_and_install_webview2', 'install_webview2_if_not_installed']
 

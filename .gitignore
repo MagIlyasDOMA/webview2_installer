@@ -3,3 +3,5 @@
 /build/
 /dist/
 /webview2_installer.egg-info
+/target/
+*.dll

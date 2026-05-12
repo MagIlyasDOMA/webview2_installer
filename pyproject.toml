@@ -13,4 +13,26 @@ dependencies = [
 ]
 
 [tool.setuptools]
-py-modules = ['webview2_installer']
+packages = ['webview2_installer']
+
+[tool.setuptools.package-data]
+webview2_installer = ["*.dll"]
+
+[tool.cibuildwheel]
+archs = ["x86", "AMD64", "ARM64"]
+
+# Указываем, для каких версий Python нужны колеса
+build = ["cp38-*", "cp39-*", "cp310-*", "cp311-*", "cp312-*", "cp313-*", "cp314-*"] # Измените под свои нужды
+
+[tool.cibuildwheel.windows]
+repair-wheel-command = "delvewheel repair --add-path {project} -w {dest_dir} {wheel}"
+
+[dependency-groups]
+dev = [
+    "cibuildwheel>=2.23.4",
+    "devscript>=0.1.1",
+    "cibuildwheel>=2.23.4",
+]
+
+[devscript]
+build = "cibuildwheel --platform windows"

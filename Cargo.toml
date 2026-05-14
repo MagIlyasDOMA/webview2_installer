@@ -13,7 +13,7 @@ winreg = "0.56"
 reqwest = { version = "0.13.3", features = ["blocking", "native-tls"] }
 tempfile = "3.8"
 indicatif = "0.18.4"
-pyo3 = "0.28.3"
+#pyo3 = "0.28.3"
 
 [target.'cfg(not(windows))'.dependencies]
 

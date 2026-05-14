@@ -2,6 +2,7 @@
 name = "webview2_installer"
 version = "1.0.0"
 edition = "2021"
+description = "WebView2 installer for Windows"
 
 [lib]
 name = "webview2_installer"
@@ -13,7 +14,6 @@ winreg = "0.56"
 reqwest = { version = "0.13.3", features = ["blocking", "native-tls"] }
 tempfile = "3.8"
 indicatif = "0.18.4"
-#pyo3 = "0.28.3"
 
 [target.'cfg(not(windows))'.dependencies]
 

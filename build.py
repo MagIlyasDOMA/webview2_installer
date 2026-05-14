@@ -1,12 +1,11 @@
 import argparse, subprocess, sys, os
-from bidict import bidict
 from pathlib import Path
 from shutil import copy2
 from typing import Literal
 
 BuildMode = Literal['release', 'debug']
 
-targets = bidict(
+targets = dict(
     x64="x86_64-pc-windows-msvc",
     x86="i686-pc-windows-msvc",
     arm64="aarch64-pc-windows-msvc"

@@ -1,23 +1,14 @@
-[build-system]
-requires = ["maturin>=1.0,<2.0"]
-build-backend = "maturin"
-
 [project]
 name = "webview2-installer"
 version = "1.0.0"
 description = "WebView2 installer for Windows"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 
 [dependency-groups]
 dev = [
     "argparse-typing>=0.2.0 ; python_full_version >= '3.9'",
-    "bidict>=0.23.1",
     "devscript>=0.1.2",
-    "maturin>=1.13.3",
 ]
-
-[tool.maturin]
-bindings = "pyo3"
 
 [tool.devscript]
 build = "python build.py"

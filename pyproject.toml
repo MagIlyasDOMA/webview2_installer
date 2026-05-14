@@ -1,38 +1,25 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
 
 [project]
 name = "webview2-installer"
-version = "0.1.0"
+version = "1.0.0"
 description = "WebView2 installer for Windows"
 requires-python = ">=3.8"
-dependencies = [
-    "requests>=2",
-    "tqdm>=4",
-]
-
-[tool.setuptools]
-packages = ['webview2_installer']
-
-[tool.setuptools.package-data]
-webview2_installer = ["*.dll"]
-
-[tool.cibuildwheel]
-archs = ["x86", "AMD64", "ARM64"]
-
-# Указываем, для каких версий Python нужны колеса
-build = ["cp38-*", "cp39-*", "cp310-*", "cp311-*", "cp312-*", "cp313-*", "cp314-*"] # Измените под свои нужды
-
-[tool.cibuildwheel.windows]
-repair-wheel-command = "delvewheel repair --add-path {project} -w {dest_dir} {wheel}"
 
 [dependency-groups]
 dev = [
-    "cibuildwheel>=2.23.4",
-    "devscript>=0.1.1",
-    "cibuildwheel>=2.23.4",
+    "argparse-typing>=0.2.0 ; python_full_version >= '3.9'",
+    "bidict>=0.23.1",
+    "devscript>=0.1.2",
+    "maturin>=1.13.3",
 ]
 
-[devscript]
-build = "cibuildwheel --platform windows"
+[tool.maturin]
+bindings = "pyo3"
+
+[tool.devscript]
+build = "python build.py"
+build_debug = "python build.py -d"
+clean = "rmdir /s /q dist target"

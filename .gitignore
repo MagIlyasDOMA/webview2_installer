@@ -5,3 +5,5 @@
 /webview2_installer.egg-info
 /target/
 *.dll
+/build_wheel.bat
+/build_new.py

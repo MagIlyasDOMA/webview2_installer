@@ -1,4 +1,3 @@
-use std::ffi::{c_char, CString};
 use std::io::{Write, Read};
 use std::path::PathBuf;
 use std::process::Command;
@@ -7,19 +6,10 @@ use reqwest::blocking::Client;
 use tempfile::NamedTempFile;
 use winreg::enums::{HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE};
 use winreg::RegKey;
+// use pyo3::prelude::*;
 
-pub const WEBVIEW2_BOOTSTRAPPER_URL: &str = "https://go.microsoft.com/fwlink/p/?LinkId=2124703";
+const WEBVIEW2_BOOTSTRAPPER_URL: &str = "https://go.microsoft.com/fwlink/p/?LinkId=2124703";
 const WEBVIEW2_CLSID: &str = "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}";
-
-// Экспорт константы через функцию-геттер
-#[unsafe(no_mangle)]
-pub extern "C" fn get_webview2_bootstrapper_url() -> *const c_char {
-    // Создаём статический CString, чтобы строка жила вечно
-    static URL: once_cell::sync::Lazy<CString> = once_cell::sync::Lazy::new(|| {
-        CString::new(WEBVIEW2_BOOTSTRAPPER_URL).unwrap()
-    });
-    URL.as_ptr()
-}
 
 fn _is_webview2_installed() -> bool {
     let registry_paths = [
@@ -160,12 +150,7 @@ pub extern "C" fn download_and_install_webview2_verbose() -> i32 {
 /// - -1 if installation failed
 #[unsafe(no_mangle)]
 pub extern "C" fn install_webview2_if_not_installed() -> i32 {
-    match _install_webview2_if_not_installed(false) {
-        None => 0,
-        Some(true) => 1,
-        Some(false) => -1,
-    }
-}
+    _install_webview2_if_not_installed(false)}
 
 /// Checks if WebView2 is installed, and if not, installs it with verbose
 ///
@@ -175,31 +160,54 @@ pub extern "C" fn install_webview2_if_not_installed() -> i32 {
 /// - -1 if installation failed
 #[unsafe(no_mangle)]
 pub extern "C" fn install_webview2_if_not_installed_verbose() -> i32 {
-    match _install_webview2_if_not_installed(true) {
-        None => 0,
-        Some(true) => 1,
-        Some(false) => -1,
-    }
-}
+    _install_webview2_if_not_installed(true)}
 
-fn _install_webview2_if_not_installed(verbose: bool) -> Option<bool> {
+fn _install_webview2_if_not_installed(verbose: bool) -> i32 {
     if _is_webview2_installed() {
-        if verbose {
-            println!("WebView2 is already installed");
-        }
-        None
+        if verbose {println!("WebView2 is already installed");}
+        0
     } else {
-        if verbose {
-            println!("WebView2 not found. Downloading installer...");
-        }
+        if verbose {println!("WebView2 not found. Downloading installer...");}
         match _download_and_install_webview2(verbose) {
-            Ok(result) => Some(result),
+            Ok(_result) => 1,
             Err(e) => {
-                if verbose {
-                    eprintln!("Error: {}", e);
-                }
-                Some(false)
+                if verbose {eprintln!("Error: {}", e);}
+                -1
             }
         }
     }
 }
+
+
+// In dev
+
+/*
+
+
+#[pyfunction]
+#[pyo3(name="is_webview2_installed")]
+fn is_webview2_installed_python() -> bool {_is_webview2_installed()}
+
+#[pyfunction]
+#[pyo3(name="download_and_install_webview2", signature=(verbose=false))]
+fn download_and_install_webview2_python(verbose: bool) -> bool {
+    match _download_and_install_webview2(verbose) {
+        Ok(true) => true,
+        Ok(false) => false,
+        Err(_) => false,
+    }
+}
+
+#[pyfunction]
+#[pyo3(name="install_webview2_if_not_installed", signature=(verbose=false))]
+fn install_webview2_if_not_installed_python(verbose: bool) -> i32 {
+    _install_webview2_if_not_installed(verbose)}
+
+#[pymodule]
+fn webview2_installer(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(is_webview2_installed_python, m)?)?;
+    m.add_function(wrap_pyfunction!(download_and_install_webview2_python, m)?)?;
+    m.add_function(wrap_pyfunction!(install_webview2_if_not_installed_python, m)?)?;
+    Ok(())
+}
+*/

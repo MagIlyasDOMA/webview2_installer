@@ -74,7 +74,6 @@ jobs:
             # Упаковка в wheel
             maturin build \
               --target ${{ matrix.target }} \
-              --no-sdist \
               --skip-auditwheel \
               --find-interpreter \
               --out dist
@@ -83,7 +82,6 @@ jobs:
             maturin build \
               --release \
               --target ${{ matrix.target }} \
-              --no-sdist \
               --find-interpreter \
               --out dist
           fi
@@ -114,7 +112,7 @@ jobs:
 
       - name: Build sdist
         run: |
-          maturin sdist --allow-dirty
+          maturin sdist
           mkdir -p dist
           cp target/wheels/*.tar.gz dist/
 

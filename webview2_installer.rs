@@ -6,7 +6,6 @@ use reqwest::blocking::Client;
 use tempfile::NamedTempFile;
 use winreg::enums::{HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE};
 use winreg::RegKey;
-// use pyo3::prelude::*;
 
 const WEBVIEW2_BOOTSTRAPPER_URL: &str = "https://go.microsoft.com/fwlink/p/?LinkId=2124703";
 const WEBVIEW2_CLSID: &str = "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}";
@@ -177,35 +176,3 @@ fn _install_webview2_if_not_installed(verbose: bool) -> i32 {
         }
     }
 }
-
-
-// In dev
-
-/*
-#[pyfunction]
-#[pyo3(name="is_webview2_installed")]
-fn is_webview2_installed_python() -> bool {_is_webview2_installed()}
-
-#[pyfunction]
-#[pyo3(name="download_and_install_webview2", signature=(verbose=false))]
-fn download_and_install_webview2_python(verbose: bool) -> bool {
-    match _download_and_install_webview2(verbose) {
-        Ok(true) => true,
-        Ok(false) => false,
-        Err(_) => false,
-    }
-}
-
-#[pyfunction]
-#[pyo3(name="install_webview2_if_not_installed", signature=(verbose=false))]
-fn install_webview2_if_not_installed_python(verbose: bool) -> i32 {
-    _install_webview2_if_not_installed(verbose)}
-
-#[pymodule]
-fn webview2_installer(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(is_webview2_installed_python, m)?)?;
-    m.add_function(wrap_pyfunction!(download_and_install_webview2_python, m)?)?;
-    m.add_function(wrap_pyfunction!(install_webview2_if_not_installed_python, m)?)?;
-    Ok(())
-}
-*/

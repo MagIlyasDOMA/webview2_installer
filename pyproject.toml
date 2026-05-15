@@ -1,16 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "webview2-installer"
 version = "1.0.0"
 description = "WebView2 installer for Windows"
-requires-python = ">=3.9"
+requires-python = ">=3.8"
+dependencies = [
+    "typing-extensions>=4.1.1",
+]
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "MagIlyasDOMA", email = "magilyas.doma.09@list.ru"}
+]
+keywords = ["webview2", "windows", "installer", "microsoft-edge", "webview"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Installation/Setup",
+]
+
+[project.urls]
+Homepage = "https://github.com/MagIlyasDOMA/webview2-installer"
+Repository = "https://github.com/MagIlyasDOMA/webview2-installer.git"
+Documentation = "https://github.com/MagIlyasDOMA/webview2-installer#readme"
+Issues = "https://github.com/MagIlyasDOMA/webview2-installer/issues"
 
 [dependency-groups]
 dev = [
     "argparse-typing>=0.2.0 ; python_full_version >= '3.9'",
+    "build>=0.9.0",
     "devscript>=0.1.2",
 ]
 
+[tool.setuptools]
+packages = ['webview2_installer']
+
+[tool.setuptools.package-data]
+webview2_installer = ["*.dll"]
+
 [tool.devscript]
-build = "python build.py"
-build_debug = "python build.py -d"
+build = "python build_dll.py"
+build_debug = "python build_dll.py -d"
+build_wheel = "python build_dll.py && python -m build"
 clean = "rmdir /s /q dist target"

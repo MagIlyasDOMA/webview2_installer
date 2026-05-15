@@ -7,6 +7,9 @@ use tempfile::NamedTempFile;
 use winreg::enums::{HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE};
 use winreg::RegKey;
 
+#[cfg(not(target_os = "windows"))]
+compile_error!("Windows is required");
+
 const WEBVIEW2_BOOTSTRAPPER_URL: &str = "https://go.microsoft.com/fwlink/p/?LinkId=2124703";
 const WEBVIEW2_CLSID: &str = "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}";
 
@@ -73,6 +76,7 @@ fn _download_file_to_temp(verbose: bool) -> Result<PathBuf, Box<dyn std::error::
     }
 
     temp_file.flush()?;
+    temp_file.keep()?;
     Ok(temp_path)
 }
 
@@ -113,6 +117,22 @@ fn _download_and_install_webview2(verbose: bool) -> Result<bool, Box<dyn std::er
     }
 }
 
+fn _install_webview2_if_not_installed(verbose: bool) -> i32 {
+    if _is_webview2_installed() {
+        if verbose {println!("WebView2 is already installed");}
+        0
+    } else {
+        if verbose {println!("WebView2 not found. Downloading installer...");}
+        match _download_and_install_webview2(verbose) {
+            Ok(_result) => 1,
+            Err(e) => {
+                if verbose {eprintln!("Error: {}", e);}
+                -1
+            }
+        }
+    }
+}
+
 /// Checks if WebView2 Evergreen Runtime is installed
 #[unsafe(no_mangle)]
 pub extern "C" fn is_webview2_installed() -> bool {
@@ -120,24 +140,24 @@ pub extern "C" fn is_webview2_installed() -> bool {
 }
 
 /// Downloads and runs the WebView2 installer in silent mode
-/// Returns: 1 if successful, 0 if failed
+/// Returns: true if successful, false if failed
 #[unsafe(no_mangle)]
-pub extern "C" fn download_and_install_webview2() -> i32 {
+pub extern "C" fn download_and_install_webview2() -> bool {
     match _download_and_install_webview2(false) {
-        Ok(true) => 1,
-        Ok(false) => 0,
-        Err(_) => 0,
+        Ok(true) => true,
+        Ok(false) => false,
+        Err(_) => false,
     }
 }
 
 /// Downloads and runs the WebView2 installer in silent mode with verbose
-/// Returns: 1 if successful, 0 if failed
+/// Returns: true if successful, false if failed
 #[unsafe(no_mangle)]
-pub extern "C" fn download_and_install_webview2_verbose() -> i32 {
+pub extern "C" fn download_and_install_webview2_verbose() -> bool {
     match _download_and_install_webview2(true) {
-        Ok(true) => 1,
-        Ok(false) => 0,
-        Err(_) => 0,
+        Ok(true) => true,
+        Ok(false) => false,
+        Err(_) => false,
     }
 }
 
@@ -160,19 +180,3 @@ pub extern "C" fn install_webview2_if_not_installed() -> i32 {
 #[unsafe(no_mangle)]
 pub extern "C" fn install_webview2_if_not_installed_verbose() -> i32 {
     _install_webview2_if_not_installed(true)}
-
-fn _install_webview2_if_not_installed(verbose: bool) -> i32 {
-    if _is_webview2_installed() {
-        if verbose {println!("WebView2 is already installed");}
-        0
-    } else {
-        if verbose {println!("WebView2 not found. Downloading installer...");}
-        match _download_and_install_webview2(verbose) {
-            Ok(_result) => 1,
-            Err(e) => {
-                if verbose {eprintln!("Error: {}", e);}
-                -1
-            }
-        }
-    }
-}

@@ -31,6 +31,7 @@ def main():
     dist_dir = cwd / 'dist'
     dist_dir.mkdir(exist_ok=True)
 
+    package_dir = cwd / 'webview2_installer'
 
     if args.static: os.environ['RUSTFLAGS'] = '-C target-feature=+crt-static'
     else: print("Warning: This uses dynamic linking and requires Visual C++ Redistributable "
@@ -47,8 +48,10 @@ def main():
             print('✓ Successfully built dll for', full_name)
             dll_path = cwd / 'target' / target / build_mode / format_dll_filename()
             dist_path = dist_dir / format_dll_filename(arch)
+            package_path = package_dir / format_dll_filename(arch)
             copy2(dll_path, dist_path)
-            print('DLL paths:', dll_path, dist_path, sep='\n')
+            copy2(dll_path, package_path)
+            print('DLL paths:', dll_path, dist_path, package_path, sep='\n')
         else: print("✗ Failed to build dll for", full_name, file=sys.stderr)
         print()
 

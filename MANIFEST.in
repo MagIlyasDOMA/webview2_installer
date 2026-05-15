@@ -1,0 +1,4 @@
+include build_dll.py
+include Cargo.toml
+include Cargo.lock
+include webview2_installer.rs

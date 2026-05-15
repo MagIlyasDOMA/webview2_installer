@@ -7,3 +7,5 @@
 *.dll
 /build_wheel.bat
 /build_new.py
+/test.py
+test.zip

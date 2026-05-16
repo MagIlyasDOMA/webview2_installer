@@ -4,7 +4,7 @@ from typing_extensions import Literal
 
 __all__ = ['is_webview2_installed', 'install_webview2_if_not_installed',
            'download_and_install_webview2', '__version__']
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 if platform.system() != "Windows": raise OSError("This script only works on Windows")
 

@@ -1,8 +1,11 @@
 [package]
 name = "webview2_installer"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 description = "WebView2 installer for Windows"
+authors = [
+    "MagIlyasDOMA",
+]
 
 [lib]
 name = "webview2_installer"

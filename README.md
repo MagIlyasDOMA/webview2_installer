@@ -106,6 +106,7 @@ int main() {
 - Python 3.8+
 - Visual Studio Build Tools (Windows)
 - cargo, rustup
+- rcedit
 
 ### Building the DLL
 ```shell
@@ -267,6 +268,7 @@ int main() {
 - Python 3.8+
 - Visual Studio Build Tools (Windows)
 - cargo, rustup
+- rcedit
 
 ### Сборка DLL
 ```shell
